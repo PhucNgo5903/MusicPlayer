@@ -5,11 +5,14 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import com.example.musicplayer.data.model.Song
+import com.example.musicplayer.data.model.User
 
-@Database(entities = [Song::class], version = 1, exportSchema = false)
+@Database(entities = [Song::class, User::class], version = 2, exportSchema = false)
 abstract class MusicDatabase : RoomDatabase() {
+
     abstract fun songDao(): SongDao
     abstract fun userDao(): UserDao
+
     companion object {
         @Volatile
         private var INSTANCE: MusicDatabase? = null
@@ -20,7 +23,9 @@ abstract class MusicDatabase : RoomDatabase() {
                     context.applicationContext,
                     MusicDatabase::class.java,
                     "music_database"
-                ).build()
+                )
+                    .fallbackToDestructiveMigration() // Xóa DB cũ nếu version lệch (tránh crash)
+                    .build()
                 INSTANCE = instance
                 instance
             }

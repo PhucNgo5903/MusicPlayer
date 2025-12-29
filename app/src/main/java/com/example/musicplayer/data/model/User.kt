@@ -8,6 +8,6 @@ data class User(
     @PrimaryKey(autoGenerate = true)
     val id: Int = 0,
     val username: String,
-    val password: String, // Trong thực tế nên mã hóa, bài tập thì để plain text cũng được
+    val password: String,
     val fullName: String
 )

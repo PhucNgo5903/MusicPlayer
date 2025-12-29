@@ -33,4 +33,10 @@
             android:id="@+id/action_favorite_to_player"
             app:destination="@id/playerFragment" />
     </fragment>
+
+    <fragment
+        android:id="@+id/profileFragment"
+        android:name="com.example.musicplayer.ui.fragment.ProfileFragment"
+        android:label="Thông tin cá nhân"
+        tools:layout="@layout/fragment_profile" />
 </navigation>

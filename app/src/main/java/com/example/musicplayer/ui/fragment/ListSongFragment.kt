@@ -5,8 +5,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.TextView
+import android.widget.TextView // Bỏ import Button
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
@@ -34,13 +33,8 @@ class ListSongFragment : Fragment() {
         val rvSongs = view.findViewById<RecyclerView>(R.id.rvSongs)
         val progressBar = view.findViewById<View>(R.id.progressBar)
         val tvEmpty = view.findViewById<View>(R.id.tvEmpty)
-        val btnOpenFavorites = view.findViewById<Button>(R.id.btnOpenFavorites)
 
-        // --- XỬ LÝ NÚT BẤM ---
-        btnOpenFavorites.setOnClickListener {
-            findNavController().navigate(R.id.action_list_to_favorite)
-        }
-        // ---------------------
+        // --- ĐÃ XÓA ĐOẠN CODE XỬ LÝ NÚT FAVORITES Ở ĐÂY ---
 
         adapter = SongAdapter { song ->
             viewModel.selectSong(song)
