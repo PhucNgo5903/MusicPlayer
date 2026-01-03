@@ -11,12 +11,19 @@ import kotlinx.coroutines.withContext
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
 import androidx.work.workDataOf
+import com.example.musicplayer.data.local.FavoriteDao
 import com.example.musicplayer.worker.DownloadWorker
 
-class MusicRepository(private val songDao: SongDao, private val context: Context) {
+class MusicRepository(
+    private val songDao: SongDao,
+    private val favoriteDao: FavoriteDao, // <-- Mới
+    private val context: Context
+) {
 
     val allSongs: LiveData<List<Song>> = songDao.getAllSongs()
-    val favoriteSongs: LiveData<List<Song>> = songDao.getFavoriteSongs()
+    fun getFavoritesByUsername(username: String): LiveData<List<Song>> {
+        return favoriteDao.getFavoriteSongsByUser(username)
+    }
     suspend fun refreshSongsFromNetwork() {
         withContext(Dispatchers.IO) {
             try {
@@ -30,7 +37,7 @@ class MusicRepository(private val songDao: SongDao, private val context: Context
             }
         }
     }
-    fun downloadSong(song: Song) {
+    fun downloadSong(song: Song, username: String) {
         // 1. Tạo link đầy đủ (vì Worker không biết tự nối chuỗi)
         val baseUrl = "https://storage.googleapis.com/automotive-media/"
         val fullUrl = if (song.sourceUrl.startsWith("http")) song.sourceUrl else baseUrl + song.sourceUrl
@@ -38,7 +45,8 @@ class MusicRepository(private val songDao: SongDao, private val context: Context
         // 2. Đóng gói dữ liệu gửi cho Worker
         val inputData = workDataOf(
             "SONG_ID" to song.id,
-            "SONG_URL" to fullUrl
+            "SONG_URL" to fullUrl,
+            "USERNAME" to username
         )
 
         // 3. Tạo yêu cầu chạy 1 lần
@@ -49,5 +57,8 @@ class MusicRepository(private val songDao: SongDao, private val context: Context
         // 4. Gửi yêu cầu
         WorkManager.getInstance(context).enqueue(downloadRequest)
         Log.d("MusicRepository", "Đã gửi yêu cầu tải bài: ${song.title}")
+    }
+    suspend fun removeSongFromFavorites(username: String, songId: Int) {
+        favoriteDao.removeFavorite(username, songId)
     }
 }

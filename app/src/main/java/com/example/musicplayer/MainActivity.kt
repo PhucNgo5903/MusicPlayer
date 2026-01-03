@@ -62,6 +62,9 @@ class MainActivity : AppCompatActivity() {
                 R.id.nav_profile -> {
                     navController.navigate(R.id.profileFragment)
                 }
+                R.id.nav_all_songs -> {
+                    navController.navigate(R.id.listSongFragment)
+                }
                 R.id.nav_favorites -> {
                     navController.navigate(R.id.favoriteFragment)
                 }

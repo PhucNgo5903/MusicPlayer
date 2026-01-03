@@ -8,17 +8,19 @@
             android:title="Thông tin cá nhân" />
 
         <item
+            android:id="@+id/nav_all_songs"
+            android:icon="@drawable/ic_library_music"
+            android:title="Danh sách bài hát" />
+        <item
             android:id="@+id/nav_favorites"
-            android:icon="@android:drawable/btn_star_big_on"
+            android:icon="@drawable/ic_heart_filled"
             android:title="Bài hát đã tải" />
+
+        <item
+            android:id="@+id/nav_logout"
+            android:icon="@android:drawable/ic_lock_power_off"
+            android:title="Đăng xuất" />
     </group>
 
-    <item android:title="Hệ thống">
-        <menu>
-            <item
-                android:id="@+id/nav_logout"
-                android:icon="@android:drawable/ic_lock_power_off"
-                android:title="Đăng xuất" />
-        </menu>
-    </item>
+
 </menu>

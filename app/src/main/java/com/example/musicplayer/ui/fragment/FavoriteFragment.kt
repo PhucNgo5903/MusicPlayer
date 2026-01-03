@@ -32,15 +32,23 @@ class FavoriteFragment : Fragment() {
         val rvFavorites = view.findViewById<RecyclerView>(R.id.rvFavorites)
         val tvNoData = view.findViewById<TextView>(R.id.tvNoData)
 
-        // Tái sử dụng SongAdapter của màn hình List
-        adapter = SongAdapter { song ->
-            viewModel.selectSong(song) // Chọn bài
-            findNavController().navigate(R.id.action_favorite_to_player) // Chuyển sang Player
-        }
+        // Cập nhật Adapter với 2 hàm callback:
+        // 1. Click bài hát -> Phát nhạc
+        // 2. Click nút xóa -> Xóa khỏi favorite
+        adapter = SongAdapter(
+            onSongClick = { song ->
+                viewModel.selectSong(song)
+                findNavController().navigate(R.id.action_favorite_to_player)
+            },
+            onRemoveClick = { song ->
+                // Hỏi xác nhận trước khi xóa (Optional)
+                viewModel.removeFromFavorite(song)
+            }
+        )
         rvFavorites.adapter = adapter
 
         // Quan sát danh sách yêu thích (Offline)
-        viewModel.favoritePlaylist.observe(viewLifecycleOwner) { songs ->
+        viewModel.loadFavorites().observe(viewLifecycleOwner) { songs ->
             if (songs.isNullOrEmpty()) {
                 tvNoData.visibility = View.VISIBLE
                 rvFavorites.visibility = View.GONE
